@@ -1,0 +1,34 @@
+from sklearn.ensemble import IsolationForest
+from sklearn.datasets import make_classification
+
+# Generate normal transaction data with some anomalies
+X_normal, y_normal = make_classification(
+    n_samples=300, n_features=2, n_informative=2, n_redundant=0,
+    n_clusters_per_class=1, flip_y=0, random_state=42
+)
+
+# Add some obvious outliers
+outliers = np.random.uniform(low=-3, high=3, size=(10, 2))
+X_with_outliers = np.vstack([X_normal, outliers])
+
+# Apply anomaly detection
+iso_forest = IsolationForest(contamination=0.05, random_state=42)
+anomaly_predictions = iso_forest.fit_predict(X_with_outliers)  # NO LABELS!
+
+# -1 = anomaly, 1 = normal
+anomalies = X_with_outliers[anomaly_predictions == -1]
+normal_points = X_with_outliers[anomaly_predictions == 1]
+
+print(f"Found {len(anomalies)} anomalies in {len(X_with_outliers)} transactions")
+
+# Visualize
+plt.figure(figsize=(10, 6))
+plt.scatter(normal_points[:, 0], normal_points[:, 1], 
+           c='blue', label='Normal', alpha=0.6)
+plt.scatter(anomalies[:, 0], anomalies[:, 1], 
+           c='red', label='Anomalies', s=100, edgecolors='black')
+plt.title('Anomaly Detection with Isolation Forest')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.legend()
+plt.show()
