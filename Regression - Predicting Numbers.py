@@ -30,4 +30,4 @@ print(f"Equation: Score = {reg_model.intercept_:.2f} + {reg_model.coef_[0]:.2f} 
 # Predict for new student
 new_study_hours = [[8.5]]
 predicted_score = reg_model.predict(new_study_hours)
-print(f"Predicted score for 8.5 study hours: {predicted_score[0]:.1f}")
+print(f"Predicted score for 8.5 study hours: {predicted_score[0]:.1f}") #print
